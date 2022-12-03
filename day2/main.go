@@ -12,6 +12,18 @@ var winExtraValue map[string]int = map[string]int{
 	"scissor": 3,
 }
 
+var winnerMove map[string]string = map[string]string{
+	"rock": "paper",
+	"paper": "scissor",
+	"scissor": "rock",
+}
+
+var losserMove map[string]string = map[string]string{
+	"rock": "scissor",
+	"paper": "rock",
+	"scissor": "paper",
+}
+
 var elvMap map[string]string = map[string]string{
 	"A": "rock",
 	"B": "paper",
@@ -19,10 +31,11 @@ var elvMap map[string]string = map[string]string{
 }
 
 var meMap map[string]string = map[string]string{
-	"X": "rock",
-	"Y": "paper",
-	"Z": "scissor",
+	"X": "lose",
+	"Y": "draw",
+	"Z": "win",
 }
+
 
 func getPoints(me string, elve string) int {
 	if me == elve {
@@ -35,6 +48,18 @@ func getPoints(me string, elve string) int {
 		return 6 + winExtraValue[me]
 	} 
 	return 0 + winExtraValue[me]
+}
+
+func getMove(elveMove string, meOutcome string) string {
+	outcome := meMap[meOutcome]	
+	switch outcome {
+	case "lose":
+		return losserMove[elveMove]
+	case "draw":
+		return elveMove
+	default:
+		return winnerMove[elveMove]
+	}
 }
 
 func main() {
@@ -55,7 +80,7 @@ func main() {
 		second := plays[1]
 
 		moveElve := elvMap[first]
-		moveMe := meMap[second]
+		moveMe := getMove(moveElve, second)
 
 		matchPoints := getPoints(moveMe, moveElve)
 		fmt.Printf("elve: %s vs me: %s -- points: %d\n", moveElve, moveMe, matchPoints)
