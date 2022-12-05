@@ -24,28 +24,28 @@ func main() {
 
 	result := 0
 
-	for _, line := range lines {
-		middleIdx := len(line) / 2
-		left := line[:middleIdx]
-		right := line[middleIdx:]
+	for i := 0; i < len(lines); {
+		countGroup := map[rune]int{}
+		for j := 0; j < 3; j++ {
+			lineValues := map[rune]bool{}
 
-		storage := map[rune]bool{}
-		alreadyStorage := map[rune]bool{}
+			for _, c := range lines[i] {
+				if !lineValues[c] {
+					lineValues[c] = true
+					countGroup[c] += 1
+				}
+			}
 
-		for _, c := range left {
-			storage[c] = true
+			i++
 		}
 
-		for _, c := range right {
-			if storage[c] {
-				alreadyStorage[c] = true
+		for key, val := range countGroup {
+			if val == 3 {
+				result += getPriority(key)
+				continue
 			}
 		}
-
-		for key := range alreadyStorage {
-			fmt.Println("Putting:", string(key))
-			result += getPriority(key)
-		}
 	}
+
 	fmt.Println("Total value:", result)
 }
